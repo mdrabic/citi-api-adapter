@@ -33,7 +33,7 @@ class AuthorizeResource:
         auth_url += ("&redirect_uri=" + req.get_param('redirect_uri'))
 
         headers = {'Accept': req.accept}
-        response = requests.get(auth_url, headers)
+        response = requests.get(auth_url, headers=headers)
 
         print "STATUS CODE: " + str(response.status_code)
         resp.content_type = response.headers.get('content-type')
