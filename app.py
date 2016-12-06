@@ -1,6 +1,9 @@
 # app.py
 import requests
 import falcon
+import logging
+
+from httplib import HTTPConnection
 
 
 class PingResource:
@@ -19,7 +22,6 @@ class AuthorizeResource:
         pass
 
     def on_get(self, req, resp):
-        print "INCOMING: " + req.url
         auth_url = "https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/authorize"
         auth_url += "?response_type=code"
         auth_url += ("&client_id=" + req.get_param('client_id'))
@@ -30,13 +32,19 @@ class AuthorizeResource:
         auth_url += ("&state=" + req.get_param('state'))
         auth_url += ("&redirect_uri=" + req.get_param('redirect_uri'))
 
-        print "AUTH URL: " + auth_url
         headers = {'Accept': req.accept}
         response = requests.get(auth_url, headers)
 
         print "STATUS CODE: " + str(response.status_code)
         resp.content_type = response.headers.get('content-type')
         resp.body = response.text
+
+
+logging.basicConfig(level=logging.DEBUG)
+requests_log = logging.getLogger("requests.packages.urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
+HTTPConnection.debuglevel = 1
 
 api = falcon.API()
 api.add_route('/ping', PingResource())
