@@ -1,5 +1,5 @@
 # app.py
-import urllib2
+import requests
 import falcon
 
 
@@ -31,8 +31,12 @@ class AuthorizeResource:
         auth_url += ("&redirect_uri=" + req.get_param('redirect_uri'))
 
         print "AUTH URL: " + auth_url
-        response = urllib2.urlopen(auth_url)
-        resp.body = response.read()
+        headers = {'Accept': req.accept}
+        response = requests.get(auth_url, headers)
+
+        print "STATUS CODE: " + str(response.status_code)
+        resp.content_type = response.headers.get('content-type')
+        resp.body = response.text
 
 api = falcon.API()
 api.add_route('/ping', PingResource())
