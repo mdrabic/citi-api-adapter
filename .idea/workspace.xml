@@ -25,8 +25,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="34" column="40" selection-start-line="34" selection-start-column="40" selection-end-line="34" selection-end-column="40" />
+            <state relative-caret-position="209">
+              <caret line="24" column="85" selection-start-line="24" selection-start-column="76" selection-end-line="24" selection-end-column="85" />
               <folding>
                 <element signature="e#9#24#0" expanded="true" />
               </folding>
@@ -367,7 +367,7 @@
         <state relative-caret-position="-115">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#615#624#0" expanded="true" />
+            <element signature="e#615#624#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -382,8 +382,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="34" column="40" selection-start-line="34" selection-start-column="40" selection-end-line="34" selection-end-column="40" />
+        <state relative-caret-position="209">
+          <caret line="24" column="85" selection-start-line="24" selection-start-column="76" selection-end-line="24" selection-end-column="85" />
           <folding>
             <element signature="e#9#24#0" expanded="true" />
           </folding>
