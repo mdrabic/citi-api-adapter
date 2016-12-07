@@ -70,13 +70,15 @@ class TokenResource:
             resp.status = 500
             logging.debug("grant_type has an unknown value %s", grant_type)
             return
-
+        print "1"
         response = requests.post(api_url, data=body, headers=req.headers)
-
+        print "2"
         resp.set_headers(response.headers)
+        print "3"
         resp.body = response.content
         resp.status = str(response.status_code)
         log_response(resp)
+        print "4"
         falcon_req_logger.debug(response.content)
 
 
