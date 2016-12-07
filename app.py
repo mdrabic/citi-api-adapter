@@ -58,8 +58,31 @@ class TokenResource:
         log_request(req)
         body = req.bounded_stream.read()
         falcon_req_logger.debug("BODY: %s", body)
-        resp.status = 500
-        pass
+        parsed_body = falcon.uri.parse_query_string(body)
+        grant_type = parsed_body["grant_type"]
+
+        api_url = ""
+        if parsed_body == "authorization_code":
+            api_url = "https://sandbox.apihub.citi.com/authCode/oauth2/token/us/gcb"
+        elif parsed_body == "refresh_token":
+            api_url = "https://sandbox.apihub.citi.com/authCode/oauth2/refresh"
+        else:
+            resp.status = 500
+            logging.debug("grant_type has an unknown value %s", grant_type)
+            return
+
+        response = requests.post(api_url, data=body, headers=req.headers)
+
+        resp.set_headers(response.headers)
+        resp.body = response.content
+        resp.status = str(response.status_code)
+        log_response(resp)
+        falcon_req_logger.debug(response.content)
+
+
+def log_response(resp):
+    for keys, values in resp.headers.items():
+        falcon_req_logger.debug("HEADER: %s, = %s", keys, values)
 
 
 def log_request(req):
