@@ -5,6 +5,8 @@ import logging
 
 from httplib import HTTPConnection
 
+import sys
+
 
 class PingResource:
     """A resource to verify the api is up and running"""
@@ -60,18 +62,23 @@ class TokenResource:
 
 def log_request(req):
     """Logs query string and header info from falcon request object"""
-    logger = logging.getLogger('Requests')
-    msg = "QUERY STRING: " + req.query_string + "\n"
-    for keys,values in req.headers.items():
-        msg += "HEADER: " + keys + " = " + values + "\n"
+    falcon_req_logger.debug("QUERY STRING: %s", req.query_string)
+    for keys, values in req.headers.items():
+        falcon_req_logger.debug("HEADER: %s, = %s", keys, values)
 
-    logger.debug(msg)
 
-logging.basicConfig(level=logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
 requests_log.propagate = True
 HTTPConnection.debuglevel = 1
+
+req_formatting = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+falcon_req_handler = logging.StreamHandler()
+falcon_req_handler.setFormatter(req_formatting)
+falcon_req_handler.setLevel(logging.DEBUG)
+falcon_req_logger = logging.getLogger('requests')
+falcon_req_logger.setLevel(logging.DEBUG)
+falcon_req_logger.addHandler(falcon_req_handler)
 
 api = falcon.API()
 api.add_route('/ping', PingResource())
