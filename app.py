@@ -54,8 +54,10 @@ class TokenResource:
     def __init__(self):
         pass
 
-    def on_get(self, req, resp):
+    def on_post(self, req, resp):
         log_request(req)
+        body = req.bounded_stream.read()
+        falcon_req_logger.debug("BODY: %s", body)
         resp.status = 500
         pass
 
