@@ -82,7 +82,7 @@ class TokenResource:
 
 def log_response(resp):
     for keys, values in resp.headers.items():
-        falcon_req_logger.debug("HEADER: %s, = %s", keys, values)
+        falcon_req_logger.debug("HEADER: %s, = %s", keys, str(values))
 
 
 def log_request(req):
