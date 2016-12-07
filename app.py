@@ -13,11 +13,13 @@ class PingResource:
         pass
 
     def on_get(self, req, resp):
+        log_request(req)
         resp.body = '{ "hello": "world" }'
 
 
 class AuthorizeResource:
     """Adapter for the authorization code grant process"""
+
     def __init__(self):
         pass
 
@@ -44,6 +46,27 @@ class AuthorizeResource:
         resp.body = response.text
 
 
+class TokenResource:
+    """The resource invoked by Amazon when either a new token is requested or a token refresh is request"""
+
+    def __init__(self):
+        pass
+
+    def on_get(self, req, resp):
+        log_request(req)
+        resp.status = 500
+        pass
+
+
+def log_request(req):
+    """Logs query string and header info from falcon request object"""
+    logger = logging.getLogger('Requests')
+    msg = "QUERY STRING: " + req.query_string + "\n"
+    for keys,values in req.headers.items():
+        msg += "HEADER: " + keys + " = " + values + "\n"
+
+    logger.debug(msg)
+
 logging.basicConfig(level=logging.DEBUG)
 requests_log = logging.getLogger("requests.packages.urllib3")
 requests_log.setLevel(logging.DEBUG)
@@ -53,3 +76,4 @@ HTTPConnection.debuglevel = 1
 api = falcon.API()
 api.add_route('/ping', PingResource())
 api.add_route('/authorize', AuthorizeResource())
+api.add_route('/token', TokenResource())
