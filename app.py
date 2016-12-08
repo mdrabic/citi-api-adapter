@@ -39,11 +39,11 @@ class AuthorizeResource:
         headers = {'Accept': req.accept}
         response = requests.get(auth_url, headers=headers, allow_redirects=False)
 
-        print "STATUS CODE: " + str(response.status_code)
-        resp.content_type = response.headers.get('Content-Type')
+        falcon_req_logger.debug("STATUS CODE: " + str(response.status_code))
+        for keys, values in response.headers.items():
+            resp.set_header(keys, values)
+
         resp.set_header("Location", str("https://sandbox.apihub.citi.com") + response.headers.get('Location'))
-        resp.set_header('Access-Control-Allow-Origin', '*')
-        resp.set_header('Access-Control-Allow-Methods', 'GET')
         resp.status = str(response.status_code)
         resp.body = response.text
 
@@ -59,27 +59,32 @@ class TokenResource:
         body = req.bounded_stream.read()
         falcon_req_logger.debug("BODY: %s", body)
         parsed_body = falcon.uri.parse_query_string(body)
+        falcon_req_logger.debug("PARSED BODY: %s", parsed_body)
         grant_type = parsed_body["grant_type"]
 
         api_url = ""
-        if parsed_body == "authorization_code":
-            api_url = "https://sandbox.apihub.citi.com/authCode/oauth2/token/us/gcb"
-        elif parsed_body == "refresh_token":
-            api_url = "https://sandbox.apihub.citi.com/authCode/oauth2/refresh"
+        if grant_type == "authorization_code":
+            api_url = "https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/token/us/gcb"
+        elif grant_type == "refresh_token":
+            api_url = "https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/refresh"
         else:
             resp.status = 500
             logging.debug("grant_type has an unknown value %s", grant_type)
             return
-        print "1"
-        response = requests.post(api_url, data=body, headers=req.headers)
-        print "2"
-        resp.set_headers(response.headers)
-        print "3"
+
+        # remote client_id form the dict
+        parsed_body.pop('client_id', None)
+
+        headers = {'Authorization': req.get_header('Authorization'), 'Content-Type': req.get_header('Content-Type')}
+        response = requests.post(api_url, data=parsed_body, headers=headers)
+
+        for keys, values in response.headers.items():
+            resp.set_header(keys, values)
+
         resp.body = response.content
         resp.status = str(response.status_code)
-        log_response(resp)
-        print "4"
-        falcon_req_logger.debug(response.content)
+        # log_response(resp)
+        falcon_req_logger.debug("BODY: %s", response.content)
 
 
 def log_response(resp):
