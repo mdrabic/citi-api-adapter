@@ -78,8 +78,12 @@ class TokenResource:
         headers = {'Authorization': req.get_header('Authorization'), 'Content-Type': req.get_header('Content-Type')}
         response = requests.post(api_url, data=parsed_body, headers=headers)
 
-        for keys, values in response.headers.items():
-            resp.set_header(keys, values)
+        for names, values in response.headers.items():
+            if names == "Vary" or names == "Content-Encoding":
+                # skip the Vary and Content-Encoding header
+                continue
+            else:
+                resp.set_header(names, values)
 
         resp.body = response.content
         resp.status = str(response.status_code)
