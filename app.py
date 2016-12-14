@@ -29,7 +29,7 @@ class AuthorizeResource:
         auth_url = "https://sandbox.apihub.citi.com/gcb/api/authCode/oauth2/authorize"
         auth_url += "?response_type=code"
         auth_url += ("&client_id=" + req.get_param('client_id'))
-        auth_url += ("&scope=" + req.get_param('scope'))
+        auth_url += ("&scope=" + "accounts_details_transactions")
         auth_url += "&countryCode=US"
         auth_url += "&businessCode=GCB"
         auth_url += "&locale=en_US"
