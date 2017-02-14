@@ -88,19 +88,19 @@ class TokenResource:
         resp.body = response.content
         resp.status = str(response.status_code)
         # log_response(resp)
-        falcon_req_logger.debug("BODY: %s", response.content)
+        falcon_req_logger.debug("Response BODY: %s", response.content)
 
 
 def log_response(resp):
     for keys, values in resp.headers.items():
-        falcon_req_logger.debug("HEADER: %s, = %s", keys, str(values))
+        falcon_req_logger.debug("Response HEADER: %s, = %s", keys, str(values))
 
 
 def log_request(req):
     """Logs query string and header info from falcon request object"""
     falcon_req_logger.debug("QUERY STRING: %s", req.query_string)
     for keys, values in req.headers.items():
-        falcon_req_logger.debug("HEADER: %s, = %s", keys, values)
+        falcon_req_logger.debug("Request HEADER: %s, = %s", keys, values)
 
 
 requests_log = logging.getLogger("requests.packages.urllib3")
